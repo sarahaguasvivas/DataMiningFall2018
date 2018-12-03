@@ -1,3 +1,4 @@
 *.avi
 data/color.avi
 data/depth.avi
+*.pyc
