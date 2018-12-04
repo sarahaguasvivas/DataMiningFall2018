@@ -3,6 +3,7 @@ import numpy as np
 import cv2
 import DBSCANstream
 import matplotlib.pyplot as plt
+import time
 cap= cv2.VideoCapture('../data/depth.avi')
 cap1= cv2.VideoCapture('../data/color.avi')
 
@@ -13,13 +14,14 @@ while(cap.isOpened()):
     ret1, frame1= cap1.read()
     depth=cv2.cvtColor(frame, cv2.IMREAD_COLOR)
 
-
     color= cv2.cvtColor(frame1, cv2.IMREAD_COLOR)
-    #clustera= a.DBSCAN(frame)
-    #cluster= cv2.cvtColor(clustera, cv2.IMREAD_COLOR)
+    t0= time.time()
+    clustera= a.DBSCAN(frame)
+    elapsed= time.time()-t0
+    print(elapsed)
     cv2.imshow('frame', depth)
     cv2.imshow('frame1', color)
-    #cv2.imshow('frame2', cluster)
+    cv2.imshow('clustera', clustera)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
