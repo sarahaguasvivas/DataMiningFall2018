@@ -13,15 +13,15 @@ while(cap.isOpened()):
     ret, frame= cap.read()
     ret1, frame1= cap1.read()
     depth=cv2.cvtColor(frame, cv2.IMREAD_COLOR)
-
     color= cv2.cvtColor(frame1, cv2.IMREAD_COLOR)
     t0= time.time()
-    clustera= a.DBSCAN(frame)
+    clustera= a.ourDBSCAN(color, depth, 0.8)
     elapsed= time.time()-t0
     print(elapsed)
     cv2.imshow('frame', depth)
     cv2.imshow('frame1', color)
-    cv2.imshow('clustera', clustera)
+    if clustera is not None:
+        cv2.imshow('clustera', clustera)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
