@@ -16,7 +16,7 @@ while(cap.isOpened()):
     color= cv2.cvtColor(frame1, cv2.IMREAD_COLOR)
     t0= time.time()
     #clustera= a.ourDBSCAN(color, depth, 0.8)
-    clustera= a.skDBSCAN(depth)
+    clustera= a.ourDBSCAN(depth)
     elapsed= time.time()-t0
     print(elapsed)
     cv2.imshow('frame', depth)
