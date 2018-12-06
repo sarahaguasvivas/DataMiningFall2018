@@ -3,7 +3,7 @@ import numpy as np
 import cv2
 
 class StreamClustering:
-    def __init__(self, frame= None, method= 'DBSCAN', eps= 0.1, min_points=300, algorithm='auto', metric='euclidean'):
+    def __init__(self, frame= None, method= 'DBSCAN', eps= 5, min_points=300, algorithm='auto', metric='euclidean'):
         self.frame= frame
         self.method= method
         self.eps= eps
@@ -13,12 +13,14 @@ class StreamClustering:
 
     def skDBSCAN(self, frame):
         if frame is not None:
-            img= np.reshape(frame, [-1, 3])
+            frame= np.array(frame, dtype=np.float)
+            blur= cv2.blur(frame, (3,3))
+            cv2.imshow('blur', blur)
+            blur= np.reshape(blur, (-1, 3))
             rows= frame.shape[0]
             cols= frame.shape[1]
-
             return np.reshape(DBSCAN(eps=self.eps, min_samples=self.min_points,
-                    algorithm=self.algorithm,metric=self.metric).fit_predict(img), [rows, cols])
+                    algorithm=self.algorithm,metric=self.metric).fit_predict(blur), [rows, cols])
         else:
             return None
 
@@ -45,15 +47,39 @@ class StreamClustering:
             img[:, :, 0]= grRed
             img[:, :, 1]= grGreen
             img[:, :, 2]= grBlue
-            #cv2.imshow('img', img)
-            print(grBlue.shape)
-            toCluster= grBlue.reshape([-1, 3])
+
             return np.reshape(DBSCAN(eps=self.eps, min_samples=self.min_points,
-                    algorithm=self.algorithm,metric=self.metric).fit_predict(toCluster), [rows, cols])
+                    algorithm=self.algorithm,metric=self.metric).fit_predict(img.reshape([-1,3])), [rows, cols])
 
         else:
             return None
 
 
-    def parDBSCAN(self, frame):
-        pass
+    def parDBSCAN(self, frame, proportion):
+        # Pick a randomly chosen number of points in each row of the images
+        # Perform the DBSCAN on the subset of the image with the randomly selected points
+        # Perform frequent pattern mining on resulting points
+        if frame is not None:
+            rows, cols, chs = frame.shape
+            newCols= int(cols*proportion)
+            newRows= int(rows*proportion)
+            redCh= frame[:, :, 0]
+            greenCh= frame[:, :, 1]
+            blueCh= frame[:, :, 2]
+            newImg= np.zeros((newRows, newCols, chs))
+            candRows= np.sort(np.random.randint(rows, size=newRows))
+            for i in range(newRows):
+                candCols= np.sort(np.random.randint(cols, size= newCols))
+                bluechannel= blueCh[candRows[i], :]
+                redchannel= redCh[candRows[i], :]
+                greenchannel= greenCh[candRows[i], :]
+                newImg[i, :, 0] = redchannel[candCols]
+                newImg[i, :, 1] = greenchannel[candCols]
+                newImg[i, :, 2] = bluechannel[candCols]
+            newImg= cv2.blur(newImg, (3, 3))
+            cv2.imshow('newImg', newImg)
+            clusters= np.reshape(DBSCAN(eps=self.eps, min_samples=self.min_points,
+                                algorithm=self.algorithm,metric=self.metric).fit_predict(newImg.reshape([-1, 3])), [newRows, newCols])
+            return clusters
+        else:
+            return None
