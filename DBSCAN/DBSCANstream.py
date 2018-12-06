@@ -24,11 +24,9 @@ class StreamClustering:
             return None
 
     def ourDBSCAN(self, color, depth, proportionPoints):
-        depthLimit= 194.5
-        depthUpper= 194.7
+        depthLimit= 170
+        depthUpper= 175
 
-        depthLimitRed= 0
-        depthUpperRed=0
         if color is not None:
 
             red=  depth[:, :, 0]
@@ -44,9 +42,11 @@ class StreamClustering:
             grBlue= np.where(np.abs(blue) > depthUpper , blue, 0)
 
             img= np.zeros(color.shape)
+
             img[:, :, 0]= grRed
             img[:, :, 1]= grGreen
             img[:, :, 2]= grBlue
+
             cv2.imshow('img', img)
         else:
             return None
