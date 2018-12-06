@@ -13,13 +13,12 @@ class StreamClustering:
 
     def skDBSCAN(self, frame):
         if frame is not None:
-            img= np.array(frame, dtype=np.float)
-            blur= cv2.blur(img, (3,3))
-            blur= np.reshape(blur, (-1, 3))
-            rows, cols, chs= img.shape
+            img= np.reshape(frame, [-1, 3])
+            rows= frame.shape[0]
+            cols= frame.shape[1]
 
             return np.reshape(DBSCAN(eps=self.eps, min_samples=self.min_points,
-                    algorithm=self.algorithm,metric=self.metric).fit_predict(blur), [rows, cols])
+                    algorithm=self.algorithm,metric=self.metric).fit_predict(img), [rows, cols])
         else:
             return None
 
