@@ -49,7 +49,7 @@ class StreamClustering:
             img[:, :, 2]= grBlue
 
             return np.reshape(DBSCAN(eps=self.eps, min_samples=self.min_points,
-                    algorithm=self.algorithm,metric=self.metric).fit_predict(img.reshape([-1,3])), [rows, cols])
+                    algorithm=self.algorithm,metric=self.metric).fit_predict(img.reshape((-1,3))), [rows, cols])
 
         else:
             return None
@@ -73,13 +73,15 @@ class StreamClustering:
                 bluechannel= blueCh[candRows[i], :]
                 redchannel= redCh[candRows[i], :]
                 greenchannel= greenCh[candRows[i], :]
+
                 newImg[i, :, 0] = redchannel[candCols]
                 newImg[i, :, 1] = greenchannel[candCols]
                 newImg[i, :, 2] = bluechannel[candCols]
-            newImg= cv2.blur(newImg, (3, 3))
-            cv2.imshow('newImg', newImg)
+
+            newImg= np.array(newImg, dtype=np.float)
+            newImg= cv2.blur(newImg, (5, 5))
             clusters= np.reshape(DBSCAN(eps=self.eps, min_samples=self.min_points,
-                                algorithm=self.algorithm,metric=self.metric).fit_predict(newImg.reshape([-1, 3])), [newRows, newCols])
+                                algorithm=self.algorithm, metric= self.metric).fit_predict(newImg.reshape((-1, 3))), [newRows, newCols])
             return clusters
         else:
             return None

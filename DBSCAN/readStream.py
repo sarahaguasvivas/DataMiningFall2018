@@ -4,6 +4,7 @@ import cv2
 import DBSCANstream
 import matplotlib.pyplot as plt
 import time
+
 cap= cv2.VideoCapture('../data/depth.avi')
 cap1= cv2.VideoCapture('../data/color.avi')
 
@@ -17,13 +18,14 @@ while(cap.isOpened()):
     t0= time.time()
     #clustera= a.ourDBSCAN(depth)
     #clustera = a.skDBSCAN(depth)
-    clustera= a.parDBSCAN(depth, 0.4)
+    clustera= a.parDBSCAN(depth, 0.2)
     elapsed= time.time()-t0
     print(elapsed)
+
     cv2.imshow('frame', depth)
     cv2.imshow('frame1', color)
     if clustera is not None:
-        cv2.imshow('clustera', clustera)
+        cv2.imshow('clustera', np.array(clustera, dtype= np.uint8))
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
