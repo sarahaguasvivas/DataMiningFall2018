@@ -25,7 +25,9 @@ while(cap.isOpened()):
     cv2.imshow('frame', depth)
     cv2.imshow('frame1', color)
     if clustera is not None:
-        cv2.imshow('clustera', np.array(clustera, dtype= np.uint8))
+        plt.imshow(clustera)
+        plt.pause(0.001)
+        plt.draw()
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
