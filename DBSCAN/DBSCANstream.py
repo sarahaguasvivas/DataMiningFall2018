@@ -82,6 +82,7 @@ class StreamClustering:
             newImg= cv2.blur(newImg, (5, 5))
             clusters= np.reshape(DBSCAN(eps=self.eps, min_samples=self.min_points,
                                 algorithm=self.algorithm, metric= self.metric).fit_predict(newImg.reshape((-1, 3))), [newRows, newCols])
-            return clusters
+            numClusters= len(np.unique(clusters))
+            return clusters, numClusters
         else:
             return None
