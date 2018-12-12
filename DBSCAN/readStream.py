@@ -28,6 +28,7 @@ try:
         #cv2.imshow('frame1', color)
         if clustera is not None:
             im= plt.imshow(clustera)
+
             ims.append([im])
             plt.pause(0.0000001)
             plt.draw()
@@ -40,7 +41,7 @@ except:
                                     repeat_delay=1000)
 #    writer= FFMpegWriter(fps=30, metadata= dict(artist='Me'),bitrate=180)
 
-    ani.save('movie.mp4') #, writer=writer)
+    ani.save('DBSCAN.mp4') #, writer=writer)
 
 cap.release()
 cap1.release()
