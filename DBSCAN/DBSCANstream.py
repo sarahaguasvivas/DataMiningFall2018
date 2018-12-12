@@ -84,18 +84,19 @@ class StreamClustering:
             clusters= np.reshape(DBSCAN(eps=self.eps, min_samples=self.min_points,
                                 algorithm=self.algorithm, metric= self.metric).fit_predict(newImg.reshape((-1, 3))), [newRows, newCols])
             numClusters= len(np.unique(clusters))
-            return clusters, numClusters
+            return clusters, numClusters, candCols, candRows
         else:
             return None
-        def mapBack(self, cluster, color, candCols):
-            rows, cols, chs= color.shape
-            mappedImg = copy.copy(color)
-            newRows, newCols= cluster.shape
+    def mapBack(self, cluster, color,depth,candCols, candRows):
+        rows, cols, chs= color.shape
+        mappedImg = copy.copy(color)
+        newRows, newCols= cluster.shape
+        for i in range(newRows):
+            rows= candRows[i]
             for j in range(newCols):
-                rows= candCols[j]
-                for i in range(newCols):
-                    for k in range(chs):
-                        mappedImg[j, rows[i], k] = cluster[i, j]
+                columns= candCols[i][j]
+                for k in range(chs):
+                    mappedImg[rows, columns, k] = cluster[i, j]
 
-            return mappedImg
+        return mappedImg
 
