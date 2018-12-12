@@ -8,7 +8,7 @@ import time
 
 cap= cv2.VideoCapture('../data/depth.avi')
 cap1= cv2.VideoCapture('../data/color.avi')
-SCALE= 0.2
+SCALE= 0.10
 a= DBSCANstream.StreamClustering()
 ims=[]
 fig=plt.figure()
