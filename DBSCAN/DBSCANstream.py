@@ -1,7 +1,7 @@
 from sklearn.cluster import DBSCAN
 import numpy as np
 import cv2
-
+import copy
 class StreamClustering:
     def __init__(self, frame= None, method= 'DBSCAN', eps= 5, min_points=300, algorithm='auto', metric='euclidean'):
         self.frame= frame
@@ -68,15 +68,16 @@ class StreamClustering:
             blueCh= frame[:, :, 2]
             newImg= np.zeros((newRows, newCols, chs))
             candRows= np.sort(np.random.randint(rows, size=newRows))
+            candCols={}
             for i in range(newRows):
-                candCols= np.sort(np.random.randint(cols, size= newCols))
+                candCols[i]= np.sort(np.random.randint(cols, size= newCols))
                 bluechannel= blueCh[candRows[i], :]
                 redchannel= redCh[candRows[i], :]
                 greenchannel= greenCh[candRows[i], :]
 
-                newImg[i, :, 0] = redchannel[candCols]
-                newImg[i, :, 1] = greenchannel[candCols]
-                newImg[i, :, 2] = bluechannel[candCols]
+                newImg[i, :, 0] = redchannel[candCols[i]]
+                newImg[i, :, 1] = greenchannel[candCols[i]]
+                newImg[i, :, 2] = bluechannel[candCols[i]]
 
             newImg= np.array(newImg, dtype=np.float)
             newImg= cv2.blur(newImg, (5, 5))
@@ -86,3 +87,15 @@ class StreamClustering:
             return clusters, numClusters
         else:
             return None
+        def mapBack(self, cluster, color, candCols):
+            rows, cols, chs= color.shape
+            mappedImg = copy.copy(color)
+            newRows, newCols= cluster.shape
+            for j in range(newCols):
+                rows= candCols[j]
+                for i in range(newCols):
+                    for k in range(chs):
+                        mappedImg[j, rows[i], k] = cluster[i, j]
+
+            return mappedImg
+
