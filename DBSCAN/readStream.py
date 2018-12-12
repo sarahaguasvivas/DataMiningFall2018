@@ -26,11 +26,10 @@ while(cap.isOpened()):
     mapped= a.mapBack(clustera, color,depth, Col, Row)
     cv2.imshow('mapped', mapped)
     print(elapsed, numClu)
-    #cv2.imshow('frame', depth)
+    cv2.imshow('frame', depth)
     #cv2.imshow('frame1', color)
     if clustera is not None:
         im= plt.imshow(clustera)
-
         ims.append([im])
         plt.pause(0.0000001)
         plt.draw()

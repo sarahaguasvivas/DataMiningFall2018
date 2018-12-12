@@ -87,6 +87,7 @@ class StreamClustering:
             return clusters, numClusters, candCols, candRows
         else:
             return None
+
     def mapBack(self, cluster, color,depth,candCols, candRows):
         rows, cols, chs= color.shape
         mappedImg = copy.copy(color)
@@ -96,7 +97,8 @@ class StreamClustering:
             for j in range(newCols):
                 columns= candCols[i][j]
                 for k in range(chs):
-                    mappedImg[rows, columns, k] = cluster[i, j]
+                    if (depth[i, j, 2]> depth[i, j, 0] and depth[i, j, 1]> depth[i, j, 0] and cluster[i, j]==-1):
+                        mappedImg[rows, columns, k] = cluster[i, j]
 
         return mappedImg
 
